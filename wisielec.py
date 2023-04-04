@@ -44,7 +44,10 @@ metadata.create_all(engine)
 @app.get("/categories")
 def get_categories():
     try:
-        return[{"name": "Karol", "description":"test"}]
+        query = db.select(categories)
+        result= connection.execute(query).fetchall()
+        result= [dict(row) for row in result]
+        return result
     except Exception as error:
         print(error)
         return {"status": "failed"}
