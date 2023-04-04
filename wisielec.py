@@ -46,7 +46,6 @@ def get_categories():
     try:
         query = db.select(categories)
         result= connection.execute(query).fetchall()
-        result= [dict(row) for row in result]
         return result
     except Exception as error:
         print(error)
@@ -57,7 +56,9 @@ def get_categories():
 @app.get("/categories/{id}")
 def get_categories_by_ids(id:int):
     try:
-        return {"id": id, "name": "Karol", "description":"test"}
+        query=db.select(categories).where(categories.columns.id==id)
+        result= connection.execute(query).fetchall()
+        return result
     except Exception as error:
         print(error)
         return {"status": "failed"}
@@ -86,10 +87,16 @@ async def post_categories(request: Request):
 async def add_words(request: Request):
     try:
         parsed_json = json.loads (await request.body())
-        name=parsed_json["name"]
+        word_name=parsed_json["name"]
         category_id=parsed_json["category_id"]
-        print(name, category_id)
-        return {"status": "done"}
+        print(word_name, category_id)
+        query=db.select(categories).where(categories.columns.id==category_id)
+        result = connection.execute(query).fetchall()
+        if not result:
+            return {"status": "failed", "info": "No such categories with this id can not add this word"}
+        query=db.insert(words).values(category_id=category_id, words=word_name)
+        connection.execute(query)
+        return {"status": 'done'}
     except Exception as error:
         print(error)
         return {"status": "failed"}
