@@ -59,7 +59,7 @@ def get_categories_by_ids(id:int):
         print(error)
         return {"status": "failed"}
 
-# Tworzymy postowy endpoint do dodawania kategorii
+# Tworzymy postowy endpoint do dodawania kategorii + dodane query do dodania kategorii
 
 @app.post("/categories")
 async def post_categories(request: Request):
@@ -67,6 +67,10 @@ async def post_categories(request: Request):
         parsed_json = json.loads (await request.body())
         name=parsed_json["name"]
         description=parsed_json["description"]
+
+        query= db.insert(categories).values(name=name, description=description)
+        connection.execute(query)
+
         print(name, description)
         return {"status": "done"}
     except Exception as error:
@@ -96,3 +100,5 @@ def get_words_random():
     except Exception as error:
         print(error)
         return {"status": "failed"}
+
+
