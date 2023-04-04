@@ -38,3 +38,61 @@ words = db.Table('Words', metadata,
 # Wykonujemy tworzenie tabel:
 
 metadata.create_all(engine)
+
+# Tworzymy getowy endpoint category do pobierania kategorii
+
+@app.get("/categories")
+def get_categories():
+    try:
+        return[{"name": "Karol", "description":"test"}]
+    except Exception as error:
+        print(error)
+        return {"status": "failed"}
+
+# Tworzymy getowy endpoint do pobierania pojedynczej kategorii po id
+
+@app.get("/categories/{id}")
+def get_categories_by_ids(id:int):
+    try:
+        return {"id": id, "name": "Karol", "description":"test"}
+    except Exception as error:
+        print(error)
+        return {"status": "failed"}
+
+# Tworzymy postowy endpoint do dodawania kategorii
+
+@app.post("/categories")
+async def post_categories(request: Request):
+    try:
+        parsed_json = json.loads (await request.body())
+        name=parsed_json["name"]
+        description=parsed_json["description"]
+        print(name, description)
+        return {"status": "done"}
+    except Exception as error:
+        print(error)
+        return {"status": "failed"}
+
+# Tworzymy postowy endpoint do dodawania nowego słowa w grze
+
+@app.post("/words")
+async def add_words(request: Request):
+    try:
+        parsed_json = json.loads (await request.body())
+        name=parsed_json["name"]
+        category_id=parsed_json["category_id"]
+        print(name, category_id)
+        return {"status": "done"}
+    except Exception as error:
+        print(error)
+        return {"status": "failed"}
+
+# Tworzymy getowy endpoint do pobrania losowego słowa z bazy
+
+@app.get("/words/random")
+def get_words_random():
+    try:
+        return {"id": 3, "name": "Filip", "description":"test4"}
+    except Exception as error:
+        print(error)
+        return {"status": "failed"}
