@@ -22,10 +22,19 @@ connection = engine.connect()
 
 metadata = db.MetaData()
 
+# Definition of creating new tables
 categories = db.Table('Categories', metadata,
                       db.Column('id', db.Integer(), primary_key=True, autoincrement=True),
                       db.Column('name', db.String(60), nullable=False),
                       db.Column('description', db.String(100), nullable=False)
                       )
+
+#
+words = db.Table('Words', metadata,
+                    db.Column('id', db.Integer(), primary_key=True, autoincrement=True),
+                    db.Column('category_id', db.Integer(),nullable=False),
+                    db.Column('words', db.String(100), nullable=False))
+
+# Wykonujemy tworzenie tabel:
 
 metadata.create_all(engine)
