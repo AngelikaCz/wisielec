@@ -108,16 +108,16 @@ from  sqlalchemy.sql.expression import func, select
 @app.get("/words/random")
 def get_words_random():
     try:
-        query= db.select(words).order_by(func.random()).limit(1)
+        query = db.select(words).order_by(func.random()).limit(1)
         result = connection.execute(query).fetchone()
         print(result)
         cat = result["category_id"]
-        query2=db.select(categories).where(categories.columns.id == cat)
-        result2=connection.execute(query2).fetchone()
-        response = {"name":result["name"], "id":result["id"], "category":result2}
+        query2 = db.select(categories).where(categories.columns.id == cat)
+        result2 = connection.execute(query2).fetchone()
+        response = {"name": result["name"], "id": result["id"], "category": result2}
         return response
     except Exception as error:
         print(error)
-        return {"status": "failed"}
+        return {'status': 'failed'}
 
 
